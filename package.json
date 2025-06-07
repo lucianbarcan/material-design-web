@@ -1,0 +1,26 @@
+{
+  "name": "material-design-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "main": "dist/material-design-web.js",
+  "module": "dist/material-design-web.js",
+  "types": "dist/types/main.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
+  },
+  "devDependencies": {
+    "@storybook/addon-docs": "^9.0.0",
+    "@storybook/html-vite": "^9.0.0",
+    "storybook": "^9.0.0",
+    "typescript": "~5.8.3",
+    "vite": "^6.3.5"
+  }
+}
