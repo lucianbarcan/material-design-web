@@ -16,25 +16,32 @@ const meta = {
     return `<md-button
         icon="${args.icon ? args.icon : ''}"
         size="${args.size}"
+        shape="${args.shape}"
       >${args.label}</md-button>`
   },
   argTypes: {
     size: {
       description: 'The size of the button',
       options: ['extra_small', 'small', 'medium', 'large', 'extra_large'],
-      defaultValue: 'default',
       table: {
         defaultValue: { summary: 'medium' },
         subcategory: 'Material Design',
       },
       control: { type: 'select' }
     },
-    icon: {
-      description: 'The size of the button',
-      options: icons_names,
-      defaultValue: 'default',
+    shape: {
+      description: 'The shape of the button',
+      options: ['square', 'round'],
       table: {
-        defaultValue: { summary: 'medium' },
+        defaultValue: { summary: 'square' },
+        subcategory: 'Material Design',
+      },
+      control: { type: 'select' }
+    },
+    icon: {
+      description: 'The icon that is going to be displayed on the button',
+      options: icons_names,
+      table: {
         subcategory: 'Material Design',
       },
       control: { type: 'select' }
@@ -56,6 +63,7 @@ export const Default: Story = {
   args: {
     size: "medium",
     label: "Click Me",
+    shape: "square",
     icon: null
   },
 };
