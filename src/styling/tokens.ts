@@ -6,7 +6,4 @@ export function loadTokens() {
     document.documentElement.style.setProperty('--md-sys-elevation-level3', '6px');
     document.documentElement.style.setProperty('--md-sys-elevation-level4', '8px');
     document.documentElement.style.setProperty('--md-sys-elevation-level5', '12px');
-
-    // Shadow color
-    document.documentElement.style.setProperty('--md-sys-color-shadow', '#000000');
 }

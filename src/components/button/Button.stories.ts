@@ -1,10 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
+import { icons_names } from './icon-names';
 
 interface ButtonProps {
   size: string;
   shape: string;
   color: string;
   label: string;
+  icon: string | null;
 }
 
 const meta = {
@@ -12,6 +14,7 @@ const meta = {
   tags: ['autodocs'],
   render: (args: ButtonProps) => {
     return `<md-button
+        icon="${args.icon ? args.icon : ''}"
         size="${args.size}"
       >${args.label}</md-button>`
   },
@@ -19,6 +22,16 @@ const meta = {
     size: {
       description: 'The size of the button',
       options: ['extra_small', 'small', 'medium', 'large', 'extra_large'],
+      defaultValue: 'default',
+      table: {
+        defaultValue: { summary: 'medium' },
+        subcategory: 'Material Design',
+      },
+      control: { type: 'select' }
+    },
+    icon: {
+      description: 'The size of the button',
+      options: icons_names,
       defaultValue: 'default',
       table: {
         defaultValue: { summary: 'medium' },
@@ -43,5 +56,6 @@ export const Default: Story = {
   args: {
     size: "medium",
     label: "Click Me",
+    icon: null
   },
 };

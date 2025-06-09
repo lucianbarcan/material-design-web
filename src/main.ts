@@ -1,8 +1,10 @@
 import Button from "./components/button/button";
+import { loadTokens } from "./styling/tokens";
 
 // Register custom elements
 window.customElements.define('md-button', Button);
 
+loadTokens();
 
 // Export components
 export {
