@@ -1,3 +1,4 @@
+import { ShapeCorner } from "../../styling/Shape";
 import { Data } from "../../utils/decorators";
 
 type Size = 'extra_small' | 'small' | 'medium' | 'large' | 'extra_large';
@@ -10,16 +11,17 @@ const MEASUREMENTS: { [K in Size]: {
     height: number,
     padding: number,
     separator: number,
-    roundBorderRadius: number,
+    roundBorderRadius: ShapeCorner,
+    squareBorderRadius: ShapeCorner,
     iconSize: number,
 } } = {
     extra_small: {
         height: 32,
         padding: 12,
         separator: 4,
-        roundBorderRadius: 999,
+        roundBorderRadius: ShapeCorner.Circular,
+        squareBorderRadius: ShapeCorner.Medium,
         iconSize: 20,
-        // squareBorderRadius
         // leading space
         // trailing space
         // spring animation damping
@@ -29,28 +31,32 @@ const MEASUREMENTS: { [K in Size]: {
         height: 40,
         padding: 16,
         separator: 8,
-        roundBorderRadius: 999,
+        roundBorderRadius: ShapeCorner.Circular,
+        squareBorderRadius: ShapeCorner.Medium,
         iconSize: 20,
     },
     medium: {
         height: 56,
         padding: 24,
         separator: 8,
-        roundBorderRadius: 999,
+        roundBorderRadius: ShapeCorner.Circular,
+        squareBorderRadius: ShapeCorner.Large,
         iconSize: 24,
     },
     large: {
         height: 96,
         padding: 48,
         separator: 12,
-        roundBorderRadius: 999,
+        roundBorderRadius: ShapeCorner.Circular,
+        squareBorderRadius: ShapeCorner.ExtraLarge,
         iconSize: 32,
     },
     extra_large: {
         height: 136,
         padding: 64,
         separator: 16,
-        roundBorderRadius: 999,
+        roundBorderRadius: ShapeCorner.Circular,
+        squareBorderRadius: ShapeCorner.ExtraLarge,
         iconSize: 40,
     },
 };
@@ -92,12 +98,15 @@ export default class Button extends HTMLElement {
         const root = document.createElement('button');
 
         const style = document.createElement('style');
+
+        const shape = this._shape === 'round' ? MEASUREMENTS[this._size].roundBorderRadius : MEASUREMENTS[this._size].squareBorderRadius;
+
         style.textContent = `
             button {
                 height: ${MEASUREMENTS[this._size].height}px;
                 padding: 0 ${MEASUREMENTS[this._size].padding}px;
                 border: none;
-                border-radius: ${MEASUREMENTS[this._size].roundBorderRadius}px;
+                border-radius: var(${shape});
 
                 background-color: var(--md-sys-color-surface-container-low);
                 box-shadow: 0px var(--md-sys-elevation-level1) calc(var(--md-sys-elevation-level1) * 2) 0px color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent);
