@@ -17,7 +17,7 @@ export const FontWeight = {
 }
 
 export function loadFontTokens() {
-    document.documentElement.style.setProperty('--md-ref-typface-brand', 'Roboto');
+    document.documentElement.style.setProperty('--md-ref-typeface-brand', 'Roboto');
     document.documentElement.style.setProperty('--md-ref-typeface-plain', 'Roboto');
 
     document.documentElement.style.setProperty('--md-ref-typeface-weight-regular', '400');
