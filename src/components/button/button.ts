@@ -1,3 +1,4 @@
+import { Font, FontWeight } from "../../styling/Font";
 import { ShapeCorner } from "../../styling/Shape";
 import { Data } from "../../utils/decorators";
 
@@ -14,6 +15,11 @@ const MEASUREMENTS: { [K in Size]: {
     roundBorderRadius: ShapeCorner,
     squareBorderRadius: ShapeCorner,
     iconSize: number,
+    font: Font,
+    fontWeight: FontWeight,
+    fontSize: number,
+    lineHeight: number,
+    fontTracking: number
 } } = {
     extra_small: {
         height: 32,
@@ -22,6 +28,11 @@ const MEASUREMENTS: { [K in Size]: {
         roundBorderRadius: ShapeCorner.Circular,
         squareBorderRadius: ShapeCorner.Medium,
         iconSize: 20,
+        font: Font.Plain,
+        fontWeight: FontWeight.Medium,
+        fontSize: 14,
+        lineHeight: 20,
+        fontTracking: 0.1,
         // leading space
         // trailing space
         // spring animation damping
@@ -34,6 +45,11 @@ const MEASUREMENTS: { [K in Size]: {
         roundBorderRadius: ShapeCorner.Circular,
         squareBorderRadius: ShapeCorner.Medium,
         iconSize: 20,
+        font: Font.Plain,
+        fontWeight: FontWeight.Medium,
+        fontSize: 14,
+        lineHeight: 20,
+        fontTracking: 0.1,
     },
     medium: {
         height: 56,
@@ -42,6 +58,11 @@ const MEASUREMENTS: { [K in Size]: {
         roundBorderRadius: ShapeCorner.Circular,
         squareBorderRadius: ShapeCorner.Large,
         iconSize: 24,
+        font: Font.Plain,
+        fontWeight: FontWeight.Medium,
+        fontSize: 16,
+        lineHeight: 24,
+        fontTracking: 0.15,
     },
     large: {
         height: 96,
@@ -50,6 +71,11 @@ const MEASUREMENTS: { [K in Size]: {
         roundBorderRadius: ShapeCorner.Circular,
         squareBorderRadius: ShapeCorner.ExtraLarge,
         iconSize: 32,
+        font: Font.Brand,
+        fontWeight: FontWeight.Regular,
+        fontSize: 24,
+        lineHeight: 32,
+        fontTracking: 0,
     },
     extra_large: {
         height: 136,
@@ -58,6 +84,11 @@ const MEASUREMENTS: { [K in Size]: {
         roundBorderRadius: ShapeCorner.Circular,
         squareBorderRadius: ShapeCorner.ExtraLarge,
         iconSize: 40,
+        font: Font.Brand,
+        fontWeight: FontWeight.Regular,
+        fontSize: 32,
+        lineHeight: 40,
+        fontTracking: 0,
     },
 };
 
@@ -112,6 +143,12 @@ export default class Button extends HTMLElement {
                 box-shadow: 0px var(--md-sys-elevation-level1) calc(var(--md-sys-elevation-level1) * 2) 0px color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent);
 
                 color: var(--md-sys-color-primary);
+
+                font-family: var(${MEASUREMENTS[this._size].font});
+                font-weight: var(${MEASUREMENTS[this._size].fontWeight});
+                font-size: ${MEASUREMENTS[this._size].fontSize}px;
+                line-height: ${MEASUREMENTS[this._size].lineHeight}px;
+                letter-spacing: ${MEASUREMENTS[this._size].fontTracking}px;
             }
 
             button:hover {
