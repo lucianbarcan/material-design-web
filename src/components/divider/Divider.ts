@@ -2,7 +2,7 @@ import { Color } from "../../styling/Color";
 
 export default class Divider extends HTMLElement {
     static get observedAttributes() {
-        return [];
+        return ['inset', 'inset-start', 'inset-end'];
     }
 
     constructor() {
