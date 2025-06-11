@@ -7,6 +7,7 @@ interface ButtonProps {
   color: string;
   label: string;
   icon: string | null;
+  disabled: boolean;
 }
 
 const meta = {
@@ -17,6 +18,8 @@ const meta = {
         icon="${args.icon ? args.icon : ''}"
         size="${args.size}"
         shape="${args.shape}"
+        color="${args.color}"
+        ${args.disabled ? 'disabled' : ''}
       >${args.label}</md-button>`
   },
   argTypes: {
@@ -38,6 +41,15 @@ const meta = {
       },
       control: { type: 'select' }
     },
+    color: {
+      description: 'The color of the button',
+      options: ['elevated', 'filled', 'tonal', 'outlined', 'standard'],
+      table: {
+        defaultValue: { summary: 'filled' },
+        subcategory: 'Material Design',
+      },
+      control: { type: 'select' }
+    },
     icon: {
       description: 'The icon that is going to be displayed on the button',
       options: icons_names,
@@ -53,6 +65,13 @@ const meta = {
       },
       control: { type: 'text' }
     },
+    disabled: {
+      description: 'If the button is disabled or not',
+      table: {
+        subcategory: 'Button',
+      },
+      control: { type: 'boolean' }
+    },
   },
 } satisfies Meta<ButtonProps>;
 
@@ -63,7 +82,9 @@ export const Default: Story = {
   args: {
     size: "medium",
     label: "Click Me",
+    color: 'filled',
     shape: "square",
+    disabled: false,
     icon: null
   },
 };

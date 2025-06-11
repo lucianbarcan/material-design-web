@@ -1,108 +1,18 @@
-import { Font, FontWeight } from "../../styling/Font";
-import { ShapeCorner } from "../../styling/Shape";
 import { Data } from "../../utils/decorators";
-
-type Size = 'extra_small' | 'small' | 'medium' | 'large' | 'extra_large';
-type Shape = 'round' | 'square';
-type Color = 'elevated' | 'filled' | 'tonal' | 'outlined' | 'standard';
-
-type State = 'enabled' | 'disabled' | 'hovered' | 'focused' | 'pressed';
-
-const MEASUREMENTS: { [K in Size]: {
-    height: number,
-    padding: number,
-    separator: number,
-    roundBorderRadius: ShapeCorner,
-    squareBorderRadius: ShapeCorner,
-    iconSize: number,
-    font: Font,
-    fontWeight: FontWeight,
-    fontSize: number,
-    lineHeight: number,
-    fontTracking: number
-} } = {
-    extra_small: {
-        height: 32,
-        padding: 12,
-        separator: 4,
-        roundBorderRadius: ShapeCorner.Circular,
-        squareBorderRadius: ShapeCorner.Medium,
-        iconSize: 20,
-        font: Font.Plain,
-        fontWeight: FontWeight.Medium,
-        fontSize: 14,
-        lineHeight: 20,
-        fontTracking: 0.1,
-        // leading space
-        // trailing space
-        // spring animation damping
-        // spring animation stiffness
-    },
-    small: {
-        height: 40,
-        padding: 16,
-        separator: 8,
-        roundBorderRadius: ShapeCorner.Circular,
-        squareBorderRadius: ShapeCorner.Medium,
-        iconSize: 20,
-        font: Font.Plain,
-        fontWeight: FontWeight.Medium,
-        fontSize: 14,
-        lineHeight: 20,
-        fontTracking: 0.1,
-    },
-    medium: {
-        height: 56,
-        padding: 24,
-        separator: 8,
-        roundBorderRadius: ShapeCorner.Circular,
-        squareBorderRadius: ShapeCorner.Large,
-        iconSize: 24,
-        font: Font.Plain,
-        fontWeight: FontWeight.Medium,
-        fontSize: 16,
-        lineHeight: 24,
-        fontTracking: 0.15,
-    },
-    large: {
-        height: 96,
-        padding: 48,
-        separator: 12,
-        roundBorderRadius: ShapeCorner.Circular,
-        squareBorderRadius: ShapeCorner.ExtraLarge,
-        iconSize: 32,
-        font: Font.Brand,
-        fontWeight: FontWeight.Regular,
-        fontSize: 24,
-        lineHeight: 32,
-        fontTracking: 0,
-    },
-    extra_large: {
-        height: 136,
-        padding: 64,
-        separator: 16,
-        roundBorderRadius: ShapeCorner.Circular,
-        squareBorderRadius: ShapeCorner.ExtraLarge,
-        iconSize: 40,
-        font: Font.Brand,
-        fontWeight: FontWeight.Regular,
-        fontSize: 32,
-        lineHeight: 40,
-        fontTracking: 0,
-    },
-};
+import { BUTTON_COLOR_CONFIG, BUTTON_MEASUREMENTS, type BUTTON_COLOR, type BUTTON_SHAPE, type BUTTON_SIZE, type BUTTON_STATE } from "./button.config";
 
 @Data()
 export default class Button extends HTMLElement {
-    private _size: Size = 'medium';
-    private _shape: Shape = 'round';
-    private _color: Color = 'filled';
+    private _size: BUTTON_SIZE = 'medium';
+    private _shape: BUTTON_SHAPE = 'round';
+    private _color: BUTTON_COLOR = 'filled';
     private _icon: string | null = null;
+    private _disabled: boolean = false;
 
-    private state: State = 'enabled';
+    private state: BUTTON_STATE = 'enabled';
 
     static get observedAttributes() {
-        return ['type', 'size', 'shape', 'color', 'icon'];
+        return ['type', 'size', 'shape', 'color', 'icon', 'disabled'];
     }
 
     constructor() {
@@ -111,6 +21,7 @@ export default class Button extends HTMLElement {
     }
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+
         if (Button.observedAttributes.includes(name) && oldValue !== newValue) {
             (this as any)[name] = newValue;
             this.updateContent();
@@ -127,32 +38,91 @@ export default class Button extends HTMLElement {
         }
 
         const root = document.createElement('button');
-
         const style = document.createElement('style');
 
-        const shape = this._shape === 'round' ? MEASUREMENTS[this._size].roundBorderRadius : MEASUREMENTS[this._size].squareBorderRadius;
+        const shape = this._shape === 'round' ? BUTTON_MEASUREMENTS[this._size].roundBorderRadius : BUTTON_MEASUREMENTS[this._size].squareBorderRadius;
+
+        this._disabled = this.hasAttribute('disabled');
+        if (this._disabled) this.state = 'disabled';
+        const colorConfig = BUTTON_COLOR_CONFIG[this._color][this.state];
+
+        // Normal
+        const backgroundColor = colorConfig.container ?
+            colorConfig.containerOpacity ?
+                `background-color: color-mix(in srgb, var(${colorConfig.container}) ${colorConfig.containerOpacity * 100}%, transparent);`
+                : `background-color: var(${colorConfig.container});`
+            : '';
+
+        const color = colorConfig.labelOpacity ?
+            `color: color-mix(in srgb, var(${colorConfig.labelColor}) ${colorConfig.labelOpacity * 100}%, transparent);`
+            : `color: var(${colorConfig.labelColor});`;
+
+        const shadow = colorConfig.elevation ?
+            `box-shadow: 0px var(--md-sys-elevation-level${colorConfig.elevation}) calc(var(--md-sys-elevation-level${colorConfig.elevation}) * 2) 0px color-mix(in srgb, var(${colorConfig.shadow}) 30%, transparent);`
+            : '';
+
+        const border = colorConfig.outline ?
+            `border: 1px solid var(${colorConfig.outline});`
+            : 'border: none;';
+
+        // Hover
+        let hoverCursor: string = '';
+        let hoverBackground: string = '';
+        let hoverStateLayer: string = '';
+        let hoverBorder: string = '';
+        let hoverColor: string = '';
+        let hoverShadow: string = '';
+        if (this.state !== 'disabled') {
+            hoverCursor = 'cursor: pointer;'
+            const hoverConfig = BUTTON_COLOR_CONFIG[this._color]['hovered'];
+
+            hoverBackground = hoverConfig.container ?
+                hoverConfig.containerOpacity ?
+                    `background-color: color-mix(in srgb, var(${hoverConfig.container}) ${hoverConfig.containerOpacity * 100}%, transparent);`
+                    : `background-color: var(${hoverConfig.container});`
+                : '';
+
+            hoverStateLayer = hoverConfig.stateLayer && hoverConfig.stateLayerOpacity ?
+                `background-image: linear-gradient(color-mix(in srgb, var(${hoverConfig.stateLayer}) ${hoverConfig.stateLayerOpacity * 100}%, transparent), color-mix(in srgb, var(${hoverConfig.stateLayer}) ${hoverConfig.stateLayerOpacity * 100}%, transparent));`
+                : '';
+
+            hoverBorder = hoverConfig.outline ?
+                `border: 1px solid var(${hoverConfig.outline});`
+                : 'border: none;';
+
+            hoverColor = `color: var(${hoverConfig.labelColor});`;
+
+            hoverShadow = hoverConfig.elevation ?
+                `box-shadow: 0px var(--md-sys-elevation-level${hoverConfig.elevation}) calc(var(--md-sys-elevation-level${hoverConfig.elevation}) * 2) 0px color-mix(in srgb, var(${hoverConfig.shadow}) 30%, transparent);`
+                : '';
+        }
+
 
         style.textContent = `
             button {
-                height: ${MEASUREMENTS[this._size].height}px;
-                padding: 0 ${MEASUREMENTS[this._size].padding}px;
-                border: none;
+                height: ${BUTTON_MEASUREMENTS[this._size].height}px;
+                padding: 0 ${BUTTON_MEASUREMENTS[this._size].padding}px;
                 border-radius: var(${shape});
 
-                background-color: var(--md-sys-color-surface-container-low);
-                box-shadow: 0px var(--md-sys-elevation-level1) calc(var(--md-sys-elevation-level1) * 2) 0px color-mix(in srgb, var(--md-sys-color-shadow) 30%, transparent);
+                ${border}
+                ${backgroundColor}
+                ${color}
+                ${shadow}
 
-                color: var(--md-sys-color-primary);
-
-                font-family: var(${MEASUREMENTS[this._size].font});
-                font-weight: var(${MEASUREMENTS[this._size].fontWeight});
-                font-size: ${MEASUREMENTS[this._size].fontSize}px;
-                line-height: ${MEASUREMENTS[this._size].lineHeight}px;
-                letter-spacing: ${MEASUREMENTS[this._size].fontTracking}px;
+                font-family: var(${BUTTON_MEASUREMENTS[this._size].font});
+                font-weight: var(${BUTTON_MEASUREMENTS[this._size].fontWeight});
+                font-size: ${BUTTON_MEASUREMENTS[this._size].fontSize}px;
+                line-height: ${BUTTON_MEASUREMENTS[this._size].lineHeight}px;
+                letter-spacing: ${BUTTON_MEASUREMENTS[this._size].fontTracking}px;
             }
 
             button:hover {
-                cursor: pointer;
+                ${hoverCursor}
+                ${hoverBackground}
+                ${hoverStateLayer}
+                ${hoverBorder}
+                ${hoverColor}
+                ${hoverShadow}
             }
         `;
 
@@ -172,8 +142,8 @@ export default class Button extends HTMLElement {
                 }
 
                 .material-symbols-outlined {
-                    font-size: ${MEASUREMENTS[this._size].iconSize}px;
-                    margin-right: ${MEASUREMENTS[this._size].separator}px;
+                    font-size: ${BUTTON_MEASUREMENTS[this._size].iconSize}px;
+                    margin-right: ${BUTTON_MEASUREMENTS[this._size].separator}px;
                 }
             `;
 
