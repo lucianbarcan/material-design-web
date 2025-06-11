@@ -11,7 +11,7 @@ interface ButtonProps {
 }
 
 const meta = {
-  title: 'Demo',
+  title: 'Button',
   tags: ['autodocs'],
   render: (args: ButtonProps) => {
     return `<md-button
