@@ -17,10 +17,13 @@
     "build-storybook": "storybook build"
   },
   "devDependencies": {
-    "@storybook/addon-docs": "^9.0.0",
-    "@storybook/html-vite": "^9.0.0",
-    "storybook": "^9.0.0",
+    "@storybook/addon-docs": "^9.0.8",
+    "@storybook/html-vite": "^9.0.8",
+    "storybook": "^9.0.8",
     "typescript": "~5.8.3",
     "vite": "^6.3.5"
+  },
+  "overrides": {
+    "storybook": "$storybook"
   }
 }
