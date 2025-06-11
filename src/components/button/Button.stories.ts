@@ -66,7 +66,7 @@ const meta = {
       control: { type: 'text' }
     },
     disabled: {
-      description: 'If the button is dissabled or not',
+      description: 'If the button is disabled or not',
       table: {
         subcategory: 'Button',
       },

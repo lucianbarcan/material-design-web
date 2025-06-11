@@ -21,7 +21,6 @@ export default class Button extends HTMLElement {
     }
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
-        console.log(name, oldValue, newValue);
 
         if (Button.observedAttributes.includes(name) && oldValue !== newValue) {
             (this as any)[name] = newValue;
