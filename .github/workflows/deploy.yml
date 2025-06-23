@@ -53,9 +53,11 @@ jobs:
           else
             git log ${{ steps.last_tag.outputs.tag }}..HEAD --pretty=format:"- %s" > changes.txt
           fi
-          echo "changelog<<EOF" >> $GITHUB_OUTPUT
-          cat changes.txt >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          {
+            echo 'changelog<<EOF'
+            cat changes.txt
+            echo 'EOF'
+          } >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
