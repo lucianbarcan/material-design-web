@@ -1,7 +1,8 @@
 {
   "name": "material-design-web",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1",
+  "description": "Material Design Web Components library built with TypeScript and Web Components",
   "type": "module",
   "main": "dist/material-design-web.js",
   "module": "dist/material-design-web.js",
@@ -9,9 +10,25 @@
   "files": [
     "dist"
   ],
+  "keywords": [
+    "material-design",
+    "web-components",
+    "ui",
+    "components",
+    "typescript",
+    "material",
+    "design-system"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucianbarcan/material-design-web.git"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/lucianbarcan/material-design-web#readme",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:minify": "npm run build && terser dist/material-design-web.js -o dist/material-design-web.min.js -c -m",
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
@@ -20,6 +37,7 @@
     "@storybook/addon-docs": "^9.0.8",
     "@storybook/html-vite": "^9.0.8",
     "storybook": "^9.0.8",
+    "terser": "^5.36.0",
     "typescript": "~5.8.3",
     "vite": "^6.3.5"
   },
