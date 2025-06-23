@@ -56,11 +56,17 @@ jobs:
           changelog=$(cat changes.txt)
           printf "changelog<<EOF\n%s\nEOF\n" "$changelog" >> $GITHUB_OUTPUT
 
+      - name: Extract tag from branch name
+        id: extract_tag
+        run: |
+          TAG_NAME="${GITHUB_REF_NAME#release/}"
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ github.ref_name }}
-          name: Release ${{ github.ref_name }}
+          tag_name: ${{ steps.extract_tag.outputs.tag_name }}
+          name: Release ${{ steps.extract_tag.outputs.tag_name }}
           body: ${{ steps.changelog.outputs.changelog }}
           files: |
             dist/material-design-web.js
