@@ -40,6 +40,18 @@ jobs:
           git diff --cached --quiet dist && echo "No changes to commit" || git commit -m "chore: update dist [skip ci]"
           git push
 
+      - name: Extract tag from branch name
+        id: extract_tag
+        run: |
+          TAG_NAME="${GITHUB_REF_NAME#release/}"
+          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
+
+      - name: Create and push tag
+        if: steps.extract_tag.outputs.tag_name != ''
+        run: |
+          git tag ${{ steps.extract_tag.outputs.tag_name }}
+          git push origin ${{ steps.extract_tag.outputs.tag_name }}
+
       - name: Get last release tag
         id: last_tag
         run: |
@@ -55,12 +67,6 @@ jobs:
           fi
           changelog=$(cat changes.txt)
           printf "changelog<<EOF\n%s\nEOF\n" "$changelog" >> $GITHUB_OUTPUT
-
-      - name: Extract tag from branch name
-        id: extract_tag
-        run: |
-          TAG_NAME="${GITHUB_REF_NAME#release/}"
-          echo "tag_name=$TAG_NAME" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
