@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/html-vite';
-import { icons_names } from './icon-names';
+import { icons_names } from '../../utils/icon-names';
 
 interface ButtonProps {
   size: string;

@@ -14,6 +14,13 @@ export default class Divider extends HTMLElement {
         this.updateContent();
     }
 
+    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+        if (Divider.observedAttributes.includes(name) && oldValue !== newValue) {
+            (this as any)[name] = newValue;
+            this.updateContent();
+        }
+    }
+
     private updateContent() {
         while (this.shadowRoot?.firstChild) {
             this.shadowRoot.removeChild(this.shadowRoot.firstChild);
