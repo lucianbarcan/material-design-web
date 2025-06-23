@@ -13,12 +13,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Needed for changelog
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '25'
           cache: 'npm'
 
       - name: Install dependencies
@@ -31,12 +31,17 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add dist
-          git diff --cached --quiet dist && echo "No changes to commit" || git commit -m "chore: update dist [skip ci]"
-          git push
+          git add -f dist
+          if ! git diff --cached --quiet dist; then
+            git commit -m "chore: update dist [skip ci]"
+            git push
+          else
+            echo "No changes to commit"
+          fi
 
       - name: Get last release tag
         id: last_tag
+        continue-on-error: true
         run: |
           echo "tag=$(git describe --tags --abbrev=0 2>/dev/null || echo '')" >> $GITHUB_OUTPUT
 
@@ -51,6 +56,12 @@ jobs:
           echo "changelog<<EOF" >> $GITHUB_OUTPUT
           cat changes.txt >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Upload dist as artifact (optional)
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
